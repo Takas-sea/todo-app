@@ -3,13 +3,17 @@ from sqlalchemy.orm import Session
 from database import get_db
 import schemas
 from services import TaskService
-from repositories import SQLAlchemyTaskRepository
+from repositories import SQLAlchemyTaskRepository, TaskRepository
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
-def get_task_service():
-    return TaskService(SQLAlchemyTaskRepository())
+def get_task_repository() -> TaskRepository:
+    return SQLAlchemyTaskRepository()
+
+
+def get_task_service(repo: TaskRepository = Depends(get_task_repository)):
+    return TaskService(repo)
 
 
 @router.get("", response_model=list[schemas.Task])
