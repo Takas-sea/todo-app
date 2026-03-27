@@ -15,6 +15,7 @@ class SQLAlchemyTaskRepository:
     def create(self, db: Session, title: str):
         new_task = models.Task(title=title)
         db.add(new_task)
-        db.commit()
+        # NOTE: do not commit here — transaction managed by service/unit-of-work
+        db.flush()
         db.refresh(new_task)
         return new_task

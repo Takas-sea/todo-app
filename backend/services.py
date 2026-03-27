@@ -10,4 +10,10 @@ class TaskService:
         return self.repo.list(db)
 
     def create_task(self, db: Session, title: str):
-        return self.repo.create(db, title)
+        try:
+            task = self.repo.create(db, title)
+            db.commit()
+            return task
+        except Exception:
+            db.rollback()
+            raise
