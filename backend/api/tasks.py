@@ -9,10 +9,12 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 
 def get_task_repository(db: Session = Depends(get_db)) -> TaskRepository:
+    """Provide a TaskRepository implementation bound to the current DB session."""
     return SQLAlchemyTaskRepository(db)
 
 
-def get_task_service(repo: TaskRepository = Depends(get_task_repository)):
+def get_task_service(repo: TaskRepository = Depends(get_task_repository)) -> TaskService:
+    """Provide a TaskService using the injected TaskRepository."""
     return TaskService(repo)
 
 
